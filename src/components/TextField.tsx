@@ -5,7 +5,7 @@ interface TextFieldProps {
   id: string;
   label: string;
   value?: string;
-  onChange: any;
+  onChange: any; // Simplified for production
   required?: boolean;
   pattern?: string;
   type?: string;
