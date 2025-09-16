@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exposé-App Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .status {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        .features {
+            list-style: none;
+            padding: 0;
+        }
+        .features li {
+            padding: 10px;
+            margin: 5px 0;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+        .features li:before {
+            content: "✅ ";
+            margin-right: 10px;
+        }
+        .test-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏠 Exposé-App - Test</h1>
+        
+        <div class="status">
+            <strong>✅ Status:</strong> Server läuft erfolgreich!
+        </div>
+        
+        <p>Wenn Sie diese Seite sehen, funktioniert der Webserver korrekt.</p>
+        
+        <h2>Implementierte Features:</h2>
+        <ul class="features">
+            <li>Kamera-Integration - Direkte Bildaufnahme im Browser</li>
+            <li>Entwurfs-Management - System zur Verwaltung und Versionierung von Entwürfen</li>
+            <li>KI-Textgenerierung - Automatische Texterstellung</li>
+            <li>Energieausweis-Import - PDF-Parser und Datenextraktion</li>
+            <li>Design-System - Material-UI Integration</li>
+        </ul>
+        
+        <div class="test-section">
+            <h3>Test-Bereich</h3>
+            <input type="text" placeholder="Test-Eingabefeld" id="testInput">
+            <br>
+            <button class="btn" onclick="testFunction()">Test Button</button>
+            <button class="btn" onclick="window.location.reload()">Seite neu laden</button>
+        </div>
+        
+        <div id="output" style="margin-top: 20px; padding: 10px; background: #fff3cd; border-radius: 5px; display: none;">
+        </div>
+    </div>
+
+    <script>
+        function testFunction() {
+            const input = document.getElementById('testInput');
+            const output = document.getElementById('output');
+            
+            if (input.value.trim()) {
+                output.innerHTML = '<strong>Eingabe erhalten:</strong> ' + input.value;
+                output.style.display = 'block';
+            } else {
+                alert('JavaScript funktioniert! 🎉\n\nDie Exposé-App ist bereit.');
+            }
+        }
+        
+        // Zeige Ladestatus
+        window.addEventListener('load', function() {
+            console.log('✅ Exposé-App geladen!');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,468 @@
+/* CSS Reset und Basis-Styles */
+:root {
+  --primary-color: #2E7D6F;
+  --error-color: #dc3545;
+  --success-color: #28a745;
+  --warning-color: #ffc107;
+  --gray-100: #f8f9fa;
+  --gray-200: #e9ecef;
+  --gray-300: #dee2e6;
+  --gray-400: #ced4da;
+  --gray-500: #adb5bd;
+  --gray-600: #6c757d;
+  --gray-700: #495057;
+  --gray-800: #343a40;
+  --gray-900: #212529;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --radius-sm: 0.25rem;
+  --radius: 0.375rem;
+  --radius-md: 0.5rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  line-height: 1.5;
+  color: var(--gray-900);
+  background-color: var(--gray-100);
+}
+
+/* Responsive Container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0.5rem;
+  }
+}
+
+/* Form Elements */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.ui-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--gray-700);
+  font-weight: 500;
+}
+
+.ui-input,
+.ui-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.ui-input.error {
+    border-color: #e53e3e;
+    background-color: #fff5f5;
+}
+
+.error-message {
+    color: #e53e3e;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.required {
+    color: #e53e3e;
+    margin-left: 4px;
+}
+
+.ui-input:focus,
+.ui-textarea:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(46, 125, 111, 0.2);
+}
+
+/* Cards */
+.ui-card {
+  background-color: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.ui-card-header {
+  padding: 1rem;
+  background-color: var(--gray-100);
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.ui-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.ui-card-content {
+  padding: 1rem;
+}
+
+/* Buttons */
+.ui-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.ui-btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.ui-btn-primary:hover {
+  background-color: #236b5e;
+}
+
+.ui-btn-secondary {
+  background-color: var(--gray-200);
+  color: var(--gray-700);
+}
+
+.ui-btn-secondary:hover {
+  background-color: var(--gray-300);
+}
+
+/* Image Gallery */
+.image-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.image-item {
+  position: relative;
+  aspect-ratio: 3/2;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.image-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-item .actions {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* Alerts */
+.alert {
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: var(--radius);
+}
+
+.alert-error {
+  background-color: #fde8e8;
+  color: var(--error-color);
+  border: 1px solid #fbd5d5;
+}
+
+.alert-success {
+  background-color: #def7ec;
+  color: var(--success-color);
+  border: 1px solid #bcf0da;
+}
+
+/* Progress Indicator */
+.progress-steps {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.progress-step {
+  flex: 1;
+  text-align: center;
+  position: relative;
+}
+
+.progress-step::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--gray-300);
+  z-index: 0;
+}
+
+.progress-step.active::before {
+  background-color: var(--primary-color);
+}
+
+.step-circle {
+  width: 2rem;
+  height: 2rem;
+  background-color: white;
+  border: 2px solid var(--gray-300);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.progress-step.active .step-circle {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.step-label {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--gray-600);
+}
+
+.progress-step.active .step-label {
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.text-gen-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  justify-content: center;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.text-gen-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.text-gen-btn:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+/* Energieausweis Upload Styles */
+.energieausweis-upload {
+  margin: 1rem 0;
+}
+
+.dropzone {
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius-sm);
+  padding: 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dropzone:hover,
+.dropzone.active {
+  border-color: var(--primary-color);
+  background-color: var(--gray-50);
+}
+
+.dropzone .upload-content {
+  color: var(--gray-600);
+}
+
+.loading {
+  color: var(--gray-600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.error-message {
+  color: var(--error-color);
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.preview-section {
+  margin-top: 1rem;
+}
+
+.preview-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.preview-toggle:hover {
+  text-decoration: underline;
+}
+
+.pdf-preview {
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: var(--gray-100);
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+}
+
+/* Modal Styles */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 1rem;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: var(--gray-900);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--gray-500);
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  background-color: var(--gray-100);
+  color: var(--gray-700);
+}
+
+.modal-body {
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.text-preview-section {
+  margin-bottom: 1.5rem;
+}
+
+.text-preview-section:last-child {
+  margin-bottom: 0;
+}
+
+.text-preview-section h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  color: var(--gray-700);
+}
+
+.text-preview-section p {
+  margin: 0;
+  color: var(--gray-900);
+  line-height: 1.5;
+}
+
+.text-preview-section ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: var(--gray-900);
+}
+
+.text-preview-section li {
+  margin-bottom: 0.25rem;
+}
+
+.modal-footer {
+  padding: 1rem;
+  border-top: 1px solid var(--gray-200);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.ui-btn.secondary {
+  background-color: white;
+  border: 1px solid var(--gray-300);
+  color: var(--gray-700);
+}
+
+.ui-btn.secondary:hover {
+  background-color: var(--gray-50);
+  border-color: var(--gray-400);
+}
