@@ -13,6 +13,14 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
   isOpen, 
   onClose 
 }) => {
+  const handleDownloadPDF = async () => {
+    const { pdf } = await import('@react-pdf/renderer');
+    const { saveAs } = await import('file-saver');
+    const { ExposePDF } = await import('./ExposePDF');
+    const doc = <ExposePDF data={data} photos={photos} />;
+    const blob = await pdf(doc).toBlob();
+    saveAs(blob, 'Expose.pdf');
+  };
   if (!isOpen) return null;
 
   // Funktion zum Prüfen ob ein Feld leer/null ist
@@ -244,6 +252,9 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
         </div>
 
         <div className="modal-footer">
+          <button className="btn btn-primary" onClick={handleDownloadPDF}>
+            📄 PDF erzeugen & herunterladen
+          </button>
           <button className="btn btn-secondary" onClick={onClose}>
             Schließen
           </button>
