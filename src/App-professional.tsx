@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { TextField } from './components/TextField-working';
 import { EnergieausweisUpload } from './components/EnergieausweisUpload';
 import { TextPreviewModal } from './components/TextPreviewModal-professional';
@@ -55,7 +55,25 @@ interface ImmobilienData {
   [key: string]: string;
 }
 
-function App() {
+interface AppProfessionalProps {
+  initialData?: ImmobilienData | null;
+  initialPhotos?: string[];
+  currentExposeId?: string | null;
+  currentFileName?: string;
+  onBackToStart?: () => void;
+  onSaveRequest?: () => void;
+  onDataChange?: (data: ImmobilienData, photos: string[]) => void;
+}
+
+function AppProfessional({
+  initialData = null,
+  initialPhotos = [],
+  currentExposeId = null,
+  currentFileName = '',
+  onBackToStart,
+  onSaveRequest,
+  onDataChange
+}: AppProfessionalProps) {
   // Universelle Felder (für alle Objekttypen sichtbar)
   const universalFields = [
     'titel', 'adresse', 'lage', 'objektTyp', 'baujahr', 'wohnflaeche', 
@@ -99,7 +117,8 @@ function App() {
     return !value || value === '0' || value === '-' || value.trim() === '';
   };
 
-  const [data, setData] = useState<ImmobilienData>({
+  // Standard-Daten für neue Exposés
+  const defaultData: ImmobilienData = {
     titel: '',
     adresse: '',
     lage: '',
@@ -135,12 +154,33 @@ function App() {
     langbeschreibung: '',
     ausstattung: '',
     lage_beschreibung: ''
-  });
+  };
 
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [data, setData] = useState<ImmobilienData>(initialData || defaultData);
+  const [photos, setPhotos] = useState<string[]>(initialPhotos || []);
   const [activeTab, setActiveTab] = useState('grunddaten');
   const [showPreview, setShowPreview] = useState(false);
   const [generatedTexts, setGeneratedTexts] = useState<any>({});
+
+  // Lade initialData wenn sich diese ändert
+  useEffect(() => {
+    if (initialData) {
+      setData(initialData);
+    }
+  }, [initialData]);
+
+  useEffect(() => {
+    if (initialPhotos) {
+      setPhotos(initialPhotos);
+    }
+  }, [initialPhotos]);
+
+  // Melde Datenänderungen an Parent-Komponente
+  useEffect(() => {
+    if (onDataChange) {
+      onDataChange(data, photos);
+    }
+  }, [data, photos, onDataChange]);
 
   const handleChange = (field: string, value: string) => {
     setData(prev => {
@@ -211,8 +251,27 @@ function App() {
             <div className="header-left">
               <h1>🏠 Exposé-App</h1>
               <p>Professionelle Immobilien-Exposés erstellen</p>
+              {currentFileName && (
+                <p className="current-file">Datei: {currentFileName}</p>
+              )}
             </div>
             <div className="header-actions">
+              {onBackToStart && (
+                <button 
+                  className="btn btn-secondary"
+                  onClick={onBackToStart}
+                >
+                  ← Zurück zur Übersicht
+                </button>
+              )}
+              {onSaveRequest && (
+                <button 
+                  className="btn btn-primary"
+                  onClick={onSaveRequest}
+                >
+                  💾 Speichern
+                </button>
+              )}
               <button 
                 className="btn btn-primary"
                 onClick={generateAllTexts}
@@ -786,4 +845,4 @@ function App() {
   );
 }
 
-export default App;
+export default AppProfessional;
