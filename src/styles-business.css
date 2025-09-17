@@ -1,4 +1,4 @@
-/* Professionelle Business-Styling für die Exposé-App */
+/* Business Professional Styling für die Exposé-App */
 
 .app {
   min-height: 100vh;
@@ -99,7 +99,6 @@
   margin-bottom: 16px;
   border-radius: 4px;
   overflow-x: auto;
-  gap: 4px;
 }
 
 .tab {
@@ -151,7 +150,7 @@
   margin: 0 0 16px 0;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
 }
 
 /* Form Layout */
@@ -302,151 +301,64 @@
   border-radius: 4px;
   padding: 32px 16px;
   text-align: center;
-  transition: all 0.2s;
-  background: #f7fafc;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s;
 }
 
 .upload-area:hover {
-  border-color: #667eea;
-  background: #edf2f7;
+  border-color: #3498db;
+  background: #f8f9fa;
 }
 
-.upload-label {
-  cursor: pointer;
-  display: block;
+.upload-area input {
+  display: none;
 }
 
-.upload-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.upload-icon {
-  font-size: 3rem;
-}
-
-.upload-hint {
-  color: #718096;
+.upload-text {
+  color: #7f8c8d;
   font-size: 0.9rem;
 }
 
 /* Photo Grid */
-.photo-grid {
+.photos-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .photo-item {
   position: relative;
-  border-radius: 8px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .photo-thumbnail {
   width: 100%;
-  height: 150px;
+  height: 120px;
   object-fit: cover;
 }
 
 .photo-remove {
   position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(255, 255, 255, 0.9);
+  top: 4px;
+  right: 4px;
+  background: rgba(231, 76, 60, 0.9);
+  color: white;
   border: none;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.8rem;
 }
 
-/* Camera Integration */
-.camera-integration {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  border: 2px solid #e2e8f0;
-}
-
-.camera-integration h3 {
-  margin: 0 0 16px 0;
-  color: #2d3748;
-}
-
-.camera-controls {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-}
-
-/* Calculations */
-.calculation-summary {
-  background: #f7fafc;
-  border-radius: 12px;
-  padding: 24px;
-  margin-top: 24px;
-}
-
-.calculation-summary h3 {
-  margin: 0 0 16px 0;
-  color: #2d3748;
-}
-
-.calc-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-}
-
-.calc-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 12px 16px;
-  background: white;
-  border-radius: 8px;
-  border: 2px solid #e2e8f0;
-}
-
-/* Generated Texts */
-.generated-texts {
-  background: #f0fff4;
-  border: 2px solid #9ae6b4;
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 24px;
-}
-
-.generated-texts h3 {
-  color: #2f855a;
-  margin: 0 0 8px 0;
-}
-
-.text-muted {
-  color: #718096;
-  font-size: 0.9rem;
-  margin: 0 0 16px 0;
-}
-
-.generated-text-item {
-  background: white;
-  padding: 12px;
-  border-radius: 6px;
-  margin-bottom: 8px;
-  border-left: 4px solid #48bb78;
-}
-
-/* Preview Controls */
-.preview-controls {
-  display: flex;
 /* Modal Styles */
 .modal-overlay {
   position: fixed;
@@ -529,6 +441,19 @@
   font-size: 0.9rem;
 }
 
+.object-type {
+  background: #3498db;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  margin-right: 8px;
+}
+
+.location {
+  color: #7f8c8d;
+}
+
 .expose-section {
   margin-bottom: 20px;
 }
@@ -582,7 +507,7 @@
   text-align: right;
 }
 
-/* Photo Grid */
+/* Photo Grid in Preview */
 .expose-photos {
   margin-bottom: 20px;
 }
@@ -610,7 +535,7 @@
   border-radius: 4px;
 }
 
-/* Calculations */
+/* Calculation Summary */
 .calculation-summary {
   background: #f8f9fa;
   border: 1px solid #ddd;
@@ -679,99 +604,8 @@
     gap: 12px;
     padding: 12px;
   }
-}
-
-.preview-summary {
-  background: #f7fafc;
-  border-radius: 12px;
-  padding: 24px;
-}
-
-.preview-summary h3 {
-  margin: 0 0 16px 0;
-  color: #2d3748;
-}
-
-.summary-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-}
-
-.summary-item {
-  background: white;
-  padding: 16px;
-  border-radius: 8px;
-  border: 2px solid #e2e8f0;
-}
-
-.summary-item strong {
-  color: #2d3748;
-  display: block;
-  margin-bottom: 4px;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .container {
-    padding: 12px;
-  }
   
-  .header-content {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .header-actions {
-    justify-content: center;
-  }
-  
-  .tabs {
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-  
-  .tabs::-webkit-scrollbar {
-    display: none;
-  }
-  
-  .form-grid {
+  .facts-grid {
     grid-template-columns: 1fr;
-  }
-  
-  .main-content {
-    padding: 20px;
-  }
-  
-  .tab-label {
-    display: none;
-  }
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.form-section {
-  animation: fadeIn 0.5s ease-out;
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  .app {
-    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-  }
-  
-  .header,
-  .main-content {
-    background: #2d3748;
-    color: #e2e8f0;
-  }
-  
-  .tabs {
-    background: #2d3748;
   }
 }

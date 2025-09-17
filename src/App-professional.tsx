@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { TextField } from './components/TextField-working';
 import { EnergieausweisUpload } from './components/EnergieausweisUpload';
 import { TextPreviewModal } from './components/TextPreviewModal-professional';
-import './styles-professional.css';
+import './styles-business.css';
 
 interface ImmobilienData {
   // Grunddaten
