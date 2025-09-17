@@ -14,13 +14,63 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
   onClose 
 }) => {
   const handleDownloadPDF = async () => {
-    const { pdf } = await import('@react-pdf/renderer');
-    const { saveAs } = await import('file-saver');
-    const { ExposePDF } = await import('./ExposePDF');
-    const doc = <ExposePDF data={data} photos={photos} />;
-    const blob = await pdf(doc).toBlob();
-    saveAs(blob, 'Expose.pdf');
+    try {
+      const { pdf } = await import('@react-pdf/renderer');
+      const { saveAs } = await import('file-saver');
+      const { Document, Page, Text, View, StyleSheet, Image } = await import('@react-pdf/renderer');
+      
+      // Inline PDF Document Definition (vereinfacht)
+      const styles = StyleSheet.create({
+        page: { padding: 30, fontSize: 12, fontFamily: 'Helvetica' },
+        title: { fontSize: 20, marginBottom: 20, textAlign: 'center', fontWeight: 'bold' },
+        section: { marginBottom: 15 },
+        text: { marginBottom: 5 },
+        grid: { display: 'flex', flexDirection: 'row', flexWrap: 'wrap' },
+        gridItem: { width: '50%', marginBottom: 10 },
+        image: { width: 200, height: 150, marginBottom: 10, marginRight: 10 }
+      });
+
+      const doc = (
+        <Document>
+          <Page size="A4" style={styles.page}>
+            <Text style={styles.title}>{data.titel || 'Immobilien-Exposé'}</Text>
+            
+            <View style={styles.section}>
+              <Text style={styles.text}>Adresse: {data.adresse}</Text>
+              <Text style={styles.text}>Objekttyp: {data.objektTyp}</Text>
+              <Text style={styles.text}>Kaufpreis: {data.verkaufspreis}</Text>
+              <Text style={styles.text}>Wohnfläche: {data.wohnflaeche} m²</Text>
+              <Text style={styles.text}>Baujahr: {data.baujahr}</Text>
+            </View>
+
+            {data.kurzbeschreibung && (
+              <View style={styles.section}>
+                <Text style={styles.text}>Beschreibung: {data.kurzbeschreibung}</Text>
+              </View>
+            )}
+
+            {photos.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.text}>Bilder:</Text>
+                <View style={styles.grid}>
+                  {photos.slice(0, 4).map((photo, index) => (
+                    <Image key={index} src={photo} style={styles.image} />
+                  ))}
+                </View>
+              </View>
+            )}
+          </Page>
+        </Document>
+      );
+
+      const blob = await pdf(doc).toBlob();
+      saveAs(blob, `Expose_${data.adresse || 'Immobilie'}.pdf`);
+    } catch (error) {
+      console.error('PDF-Generation fehlgeschlagen:', error);
+      alert('PDF konnte nicht erstellt werden. Bitte versuchen Sie es erneut.');
+    }
   };
+  
   if (!isOpen) return null;
 
   // Funktion zum Prüfen ob ein Feld leer/null ist
