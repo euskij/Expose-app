@@ -18,15 +18,24 @@ interface ImmobilienData {
   zimmer: string;
   badezimmer: string;
   balkone: string;
+  anzahl_garagen: string;
+  anzahl_stellplaetze: string;
   garage: string;
   keller: string;
+  
+  // Mehrfamilienhaus-spezifische Felder
+  anzahl_wohnungen: string;
+  anzahl_gewerbeeinheiten: string;
+  leerstehende_wohnungen: string;
+  leerstehende_gewerbe: string;
+  qm_leerstand_wohnungen: string;
+  qm_leerstand_gewerbe: string;
   
   // Finanzielle Daten
   verkaufspreis: string;
   ist_miete: string;
   soll_miete: string;
   nebenkosten: string;
-  heizkosten: string;
   maklercourtage: string;
   faktor: string;
   
@@ -48,14 +57,16 @@ function App() {
   // Universelle Felder (für alle Objekttypen sichtbar)
   const universalFields = [
     'titel', 'adresse', 'lage', 'objektTyp', 'baujahr', 'wohnflaeche', 
-    'verkaufspreis', 'heizungsart', 'bauzustand',
+    'verkaufspreis', 'heizungsart', 'bauzustand', 'anzahl_garagen', 'anzahl_stellplaetze',
     'kurzbeschreibung', 'langbeschreibung', 'ausstattung', 'lage_beschreibung'
   ];
 
   // Objekttyp-spezifische Felder
   const typeSpecificFields = {
-    wohnung: ['zimmer', 'badezimmer', 'balkone', 'ist_miete', 'soll_miete', 'nebenkosten', 'heizkosten'],
-    mehrfamilienhaus: ['grundstuecksflaeche', 'ist_miete', 'soll_miete', 'nebenkosten', 'heizkosten', 'faktor', 'garage', 'keller'],
+    wohnung: ['zimmer', 'badezimmer', 'balkone', 'ist_miete', 'soll_miete', 'nebenkosten'],
+    mehrfamilienhaus: ['grundstuecksflaeche', 'ist_miete', 'soll_miete', 'nebenkosten', 'faktor', 'garage', 'keller', 
+                       'anzahl_wohnungen', 'anzahl_gewerbeeinheiten', 'leerstehende_wohnungen', 'leerstehende_gewerbe', 
+                       'qm_leerstand_wohnungen', 'qm_leerstand_gewerbe'],
     einfamilienhaus: ['zimmer', 'badezimmer', 'grundstuecksflaeche', 'garage', 'keller', 'balkone'],
     doppelhaushälfte: ['zimmer', 'badezimmer', 'grundstuecksflaeche', 'garage', 'keller', 'balkone']
   };
@@ -80,13 +91,20 @@ function App() {
     zimmer: '',
     badezimmer: '',
     balkone: '',
+    anzahl_garagen: '',
+    anzahl_stellplaetze: '',
     garage: '',
     keller: '',
+    anzahl_wohnungen: '',
+    anzahl_gewerbeeinheiten: '',
+    leerstehende_wohnungen: '',
+    leerstehende_gewerbe: '',
+    qm_leerstand_wohnungen: '',
+    qm_leerstand_gewerbe: '',
     verkaufspreis: '',
     ist_miete: '',
     soll_miete: '',
     nebenkosten: '',
-    heizkosten: '',
     maklercourtage: '',
     faktor: '',
     heizungsart: '',
@@ -270,6 +288,24 @@ function App() {
                   type="number"
                 />
 
+                <TextField 
+                  id="anzahl_garagen" 
+                  label="Anzahl Garagen" 
+                  value={data.anzahl_garagen} 
+                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('anzahl_garagen', fn)}
+                  type="number"
+                  min="0"
+                />
+
+                <TextField 
+                  id="anzahl_stellplaetze" 
+                  label="Anzahl Stellplätze" 
+                  value={data.anzahl_stellplaetze} 
+                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('anzahl_stellplaetze', fn)}
+                  type="number"
+                  min="0"
+                />
+
                 {shouldShowField('grundstuecksflaeche') && (
                   <TextField 
                     id="grundstuecksflaeche" 
@@ -350,6 +386,73 @@ function App() {
                     </label>
                   </div>
                 )}
+
+                {/* Mehrfamilienhaus-spezifische Felder */}
+                {shouldShowField('anzahl_wohnungen') && (
+                  <TextField 
+                    id="anzahl_wohnungen" 
+                    label="Anzahl Wohnungen" 
+                    value={data.anzahl_wohnungen} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('anzahl_wohnungen', fn)}
+                    type="number"
+                    min="1"
+                  />
+                )}
+
+                {shouldShowField('anzahl_gewerbeeinheiten') && (
+                  <TextField 
+                    id="anzahl_gewerbeeinheiten" 
+                    label="Anzahl Gewerbeeinheiten" 
+                    value={data.anzahl_gewerbeeinheiten} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('anzahl_gewerbeeinheiten', fn)}
+                    type="number"
+                    min="0"
+                  />
+                )}
+
+                {shouldShowField('leerstehende_wohnungen') && (
+                  <TextField 
+                    id="leerstehende_wohnungen" 
+                    label="Leerstehende Wohnungen" 
+                    value={data.leerstehende_wohnungen} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('leerstehende_wohnungen', fn)}
+                    type="number"
+                    min="0"
+                  />
+                )}
+
+                {shouldShowField('leerstehende_gewerbe') && (
+                  <TextField 
+                    id="leerstehende_gewerbe" 
+                    label="Leerstehende Gewerbeeinheiten" 
+                    value={data.leerstehende_gewerbe} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('leerstehende_gewerbe', fn)}
+                    type="number"
+                    min="0"
+                  />
+                )}
+
+                {shouldShowField('qm_leerstand_wohnungen') && (
+                  <TextField 
+                    id="qm_leerstand_wohnungen" 
+                    label="m² Leerstand Wohnungen" 
+                    value={data.qm_leerstand_wohnungen} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('qm_leerstand_wohnungen', fn)}
+                    type="number"
+                    min="0"
+                  />
+                )}
+
+                {shouldShowField('qm_leerstand_gewerbe') && (
+                  <TextField 
+                    id="qm_leerstand_gewerbe" 
+                    label="m² Leerstand Gewerbe" 
+                    value={data.qm_leerstand_gewerbe} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('qm_leerstand_gewerbe', fn)}
+                    type="number"
+                    min="0"
+                  />
+                )}
               </div>
 
               <div className="upload-section">
@@ -397,16 +500,6 @@ function App() {
                     label="Nebenkosten / Monat (€)" 
                     value={data.nebenkosten} 
                     onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('nebenkosten', fn)}
-                    type="number"
-                  />
-                )}
-
-                {shouldShowField('heizkosten') && (
-                  <TextField 
-                    id="heizkosten" 
-                    label="Heizkosten / Monat (€)" 
-                    value={data.heizkosten} 
-                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('heizkosten', fn)}
                     type="number"
                   />
                 )}
