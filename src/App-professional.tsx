@@ -45,6 +45,30 @@ interface ImmobilienData {
 }
 
 function App() {
+  // Universelle Felder (für alle Objekttypen sichtbar)
+  const universalFields = [
+    'titel', 'adresse', 'lage', 'objektTyp', 'baujahr', 'wohnflaeche', 
+    'zimmer', 'badezimmer', 'verkaufspreis', 'heizungsart', 'bauzustand',
+    'kurzbeschreibung', 'langbeschreibung', 'ausstattung', 'lage_beschreibung'
+  ];
+
+  // Objekttyp-spezifische Felder
+  const typeSpecificFields = {
+    wohnung: ['balkone', 'ist_miete', 'soll_miete', 'nebenkosten', 'heizkosten'],
+    mehrfamilienhaus: ['grundstuecksflaeche', 'ist_miete', 'soll_miete', 'nebenkosten', 'heizkosten', 'faktor', 'garage', 'keller'],
+    einfamilienhaus: ['grundstuecksflaeche', 'garage', 'keller', 'balkone'],
+    doppelhaushälfte: ['grundstuecksflaeche', 'garage', 'keller', 'balkone']
+  };
+
+  // Funktion zum Prüfen ob ein Feld angezeigt werden soll
+  const shouldShowField = (fieldName: string): boolean => {
+    if (universalFields.includes(fieldName)) {
+      return true;
+    }
+    const specificFields = typeSpecificFields[data.objektTyp as keyof typeof typeSpecificFields] || [];
+    return specificFields.includes(fieldName);
+  };
+
   const [data, setData] = useState<ImmobilienData>({
     titel: '',
     adresse: '',
@@ -171,18 +195,16 @@ function App() {
                 />
                 
                 <div className="form-group">
-                  <label className="ui-label">Objekttyp</label>
+                  <label className="ui-label">Objekttyp *</label>
                   <select 
                     className="ui-select"
                     value={data.objektTyp}
                     onChange={(e) => handleChange('objektTyp', e.target.value)}
                   >
                     <option value="wohnung">Wohnung</option>
-                    <option value="haus">Haus</option>
-                    <option value="villa">Villa</option>
-                    <option value="doppelhaus">Doppelhaus</option>
-                    <option value="reihenhaus">Reihenhaus</option>
-                    <option value="penthouse">Penthouse</option>
+                    <option value="mehrfamilienhaus">Mehrfamilienhaus</option>
+                    <option value="einfamilienhaus">Einfamilienhaus</option>
+                    <option value="doppelhaushälfte">Doppelhaushälfte</option>
                   </select>
                 </div>
 
@@ -244,13 +266,15 @@ function App() {
                   type="number"
                 />
 
-                <TextField 
-                  id="grundstuecksflaeche" 
-                  label="Grundstücksfläche (m²)" 
-                  value={data.grundstuecksflaeche} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('grundstuecksflaeche', fn)}
-                  type="number"
-                />
+                {shouldShowField('grundstuecksflaeche') && (
+                  <TextField 
+                    id="grundstuecksflaeche" 
+                    label="Grundstücksfläche (m²)" 
+                    value={data.grundstuecksflaeche} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('grundstuecksflaeche', fn)}
+                    type="number"
+                  />
+                )}
 
                 <div className="form-group">
                   <label className="ui-label">Heizungsart</label>
@@ -286,36 +310,42 @@ function App() {
                   </select>
                 </div>
 
-                <TextField 
-                  id="balkone" 
-                  label="Anzahl Balkone/Terrassen" 
-                  value={data.balkone} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('balkone', fn)}
-                  type="number"
-                  min="0"
-                />
+                {shouldShowField('balkone') && (
+                  <TextField 
+                    id="balkone" 
+                    label="Anzahl Balkone/Terrassen" 
+                    value={data.balkone} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('balkone', fn)}
+                    type="number"
+                    min="0"
+                  />
+                )}
 
-                <div className="checkbox-group">
-                  <label className="checkbox-label">
-                    <input 
-                      type="checkbox" 
-                      checked={data.garage === 'ja'}
-                      onChange={(e) => handleChange('garage', e.target.checked ? 'ja' : 'nein')}
-                    />
-                    Garage/Stellplatz vorhanden
-                  </label>
-                </div>
+                {shouldShowField('garage') && (
+                  <div className="checkbox-group">
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={data.garage === 'ja'}
+                        onChange={(e) => handleChange('garage', e.target.checked ? 'ja' : 'nein')}
+                      />
+                      Garage/Stellplatz vorhanden
+                    </label>
+                  </div>
+                )}
 
-                <div className="checkbox-group">
-                  <label className="checkbox-label">
-                    <input 
-                      type="checkbox" 
-                      checked={data.keller === 'ja'}
-                      onChange={(e) => handleChange('keller', e.target.checked ? 'ja' : 'nein')}
-                    />
-                    Keller vorhanden
-                  </label>
-                </div>
+                {shouldShowField('keller') && (
+                  <div className="checkbox-group">
+                    <label className="checkbox-label">
+                      <input 
+                        type="checkbox" 
+                        checked={data.keller === 'ja'}
+                        onChange={(e) => handleChange('keller', e.target.checked ? 'ja' : 'nein')}
+                      />
+                      Keller vorhanden
+                    </label>
+                  </div>
+                )}
               </div>
 
               <div className="upload-section">
@@ -337,37 +367,45 @@ function App() {
                   type="number"
                 />
 
-                <TextField 
-                  id="ist_miete" 
-                  label="IST-Miete / Monat (€)" 
-                  value={data.ist_miete} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('ist_miete', fn)}
-                  type="number"
-                />
+                {shouldShowField('ist_miete') && (
+                  <TextField 
+                    id="ist_miete" 
+                    label="IST-Miete / Monat (€)" 
+                    value={data.ist_miete} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('ist_miete', fn)}
+                    type="number"
+                  />
+                )}
 
-                <TextField 
-                  id="soll_miete" 
-                  label="SOLL-Miete / Monat (€)" 
-                  value={data.soll_miete} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('soll_miete', fn)}
-                  type="number"
-                />
+                {shouldShowField('soll_miete') && (
+                  <TextField 
+                    id="soll_miete" 
+                    label="SOLL-Miete / Monat (€)" 
+                    value={data.soll_miete} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('soll_miete', fn)}
+                    type="number"
+                  />
+                )}
 
-                <TextField 
-                  id="nebenkosten" 
-                  label="Nebenkosten / Monat (€)" 
-                  value={data.nebenkosten} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('nebenkosten', fn)}
-                  type="number"
-                />
+                {shouldShowField('nebenkosten') && (
+                  <TextField 
+                    id="nebenkosten" 
+                    label="Nebenkosten / Monat (€)" 
+                    value={data.nebenkosten} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('nebenkosten', fn)}
+                    type="number"
+                  />
+                )}
 
-                <TextField 
-                  id="heizkosten" 
-                  label="Heizkosten / Monat (€)" 
-                  value={data.heizkosten} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('heizkosten', fn)}
-                  type="number"
-                />
+                {shouldShowField('heizkosten') && (
+                  <TextField 
+                    id="heizkosten" 
+                    label="Heizkosten / Monat (€)" 
+                    value={data.heizkosten} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('heizkosten', fn)}
+                    type="number"
+                  />
+                )}
 
                 <TextField 
                   id="maklercourtage" 
@@ -379,13 +417,15 @@ function App() {
                   max="10"
                 />
 
-                <TextField 
-                  id="faktor" 
-                  label="Kaufpreisfaktor" 
-                  value={data.faktor} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('faktor', fn)}
-                  type="number"
-                />
+                {shouldShowField('faktor') && (
+                  <TextField 
+                    id="faktor" 
+                    label="Kaufpreisfaktor" 
+                    value={data.faktor} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('faktor', fn)}
+                    type="number"
+                  />
+                )}
               </div>
 
               <div className="calculation-summary">
