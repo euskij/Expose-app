@@ -470,8 +470,6 @@
   user-select: none;
   z-index: 10;
 }
-  z-index: 10;
-}
 
 .photo-watermark-4 {
   position: absolute;
@@ -1283,6 +1281,7 @@
     grid-template-columns: 1fr;
     gap: 12px;
     padding: 12px;
+  }
   .facts-grid {
     grid-template-columns: 1fr;
   }

@@ -1,60 +1,16 @@
 import { useState, useEffect } from 'react';
 import { TextField } from './components/TextField-working';
+import LogoUpload from './components/LogoUpload';
 import { EnergieausweisUpload } from './components/EnergieausweisUpload';
-import { TextPreviewModal } from './components/TextPreviewModal-professional';
-import { ExposePDF } from './components/ExposePDF';
+// Preview Modal lazy laden zur Reduktion des Initialbundles
+const TextPreviewModalLazy = React.lazy(() => import('./components/TextPreviewModal-professional').then(m => ({ default: m.TextPreviewModal })));
+import React, { Suspense } from 'react';
+import ExposePreview from './components/ExposePreview';
+const ExposePDFLazy = React.lazy(() => import('./components/ExposePDF').then(m => ({ default: m.ExposePDF })));
 import './styles-business.css';
+import type { ImmobilienData as ImmobilienDataExternal } from './types';
 
-interface ImmobilienData {
-  // Grunddaten
-  titel: string;
-  adresse: string;
-  lage: string;
-  objektTyp: string;
-  
-  // Technische Daten
-  baujahr: string;
-  wohnflaeche: string;
-  grundstuecksflaeche: string;
-  zimmer: string;
-  badezimmer: string;
-  balkone: string;
-  anzahl_garagen: string;
-  anzahl_stellplaetze: string;
-  garage: string;
-  keller: string;
-  
-  // Mehrfamilienhaus-spezifische Felder
-  anzahl_wohnungen: string;
-  anzahl_gewerbeeinheiten: string;
-  leerstehende_wohnungen: string;
-  leerstehende_gewerbe: string;
-  qm_leerstand_wohnungen: string;
-  qm_leerstand_gewerbe: string;
-  
-  // Finanzielle Daten
-  verkaufspreis: string;
-  ist_miete: string;
-  soll_miete: string;
-  betriebskosten_hausgeld: string;
-  maklercourtage: string;
-  ist_faktor: string;
-  soll_faktor: string;
-  watermark_text: string;
-  
-  // Technische Details
-  heizungsart: string;
-  energietraeger: string;
-  bauzustand: string;
-  
-  // Beschreibungen
-  kurzbeschreibung: string;
-  langbeschreibung: string;
-  ausstattung: string;
-  lage_beschreibung: string;
-  
-  [key: string]: string;
-}
+import type { ImmobilienData } from './types';
 
 interface AppProfessionalProps {
   initialData?: ImmobilienData | null;
@@ -155,14 +111,19 @@ function AppProfessional({
     langbeschreibung: '',
     ausstattung: '',
     lage_beschreibung: ''
+    , kontakt_name: '', kontakt_firma: '', kontakt_email: '', kontakt_tel: '', kontakt_web: ''
   };
 
   const [data, setData] = useState<ImmobilienData>(initialData || defaultData);
   const [photos, setPhotos] = useState<string[]>(initialPhotos || []);
+  const [logo, setLogo] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('grunddaten');
   const [showPreview, setShowPreview] = useState(false);
   const [showPDF, setShowPDF] = useState(false);
   const [generatedTexts, setGeneratedTexts] = useState<any>({});
+  const [theme, setTheme] = useState<'blue' | 'neutral'>('blue');
+  const [includeOriginalImages, setIncludeOriginalImages] = useState(true);
+  const [showAgentNotices, setShowAgentNotices] = useState(true);
 
   // Lade initialData wenn sich diese ändert
   useEffect(() => {
@@ -286,6 +247,20 @@ function AppProfessional({
               >
                 👁️ Vorschau anzeigen
               </button>
+              <div style={{display:'flex', gap: '8px', alignItems:'center', flexWrap:'wrap'}}>
+                <label style={{fontSize: '0.85rem'}}>Theme:
+                  <select value={theme} onChange={(e)=>setTheme(e.target.value as any)} style={{marginLeft: 4}}>
+                    <option value="blue">Blau</option>
+                    <option value="neutral">Neutral</option>
+                  </select>
+                </label>
+                <label style={{fontSize: '0.85rem'}}>
+                  <input type="checkbox" checked={includeOriginalImages} onChange={e=>setIncludeOriginalImages(e.target.checked)} /> Originalbilder anhängen
+                </label>
+                <label style={{fontSize: '0.85rem'}}>
+                  <input type="checkbox" checked={showAgentNotices} onChange={e=>setShowAgentNotices(e.target.checked)} /> Maklerhinweise
+                </label>
+              </div>
             </div>
           </div>
         </header>
@@ -308,6 +283,7 @@ function AppProfessional({
             <section className="form-section">
               <h2>📋 Grunddaten der Immobilie</h2>
               <div className="form-grid">
+                <LogoUpload logo={logo} setLogo={setLogo} />
                 <TextField 
                   id="titel" 
                   label="Exposé-Titel" 
@@ -372,6 +348,38 @@ function AppProfessional({
                   label="Watermark-Text" 
                   value={data.watermark_text} 
                   onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('watermark_text', fn)}
+                />
+
+                <TextField 
+                  id="kontakt_name" 
+                  label="Kontakt: Name" 
+                  value={data.kontakt_name} 
+                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('kontakt_name', fn)}
+                />
+                <TextField 
+                  id="kontakt_firma" 
+                  label="Kontakt: Firma" 
+                  value={data.kontakt_firma} 
+                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('kontakt_firma', fn)}
+                />
+                <TextField 
+                  id="kontakt_email" 
+                  label="Kontakt: E-Mail" 
+                  value={data.kontakt_email} 
+                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('kontakt_email', fn)}
+                  type="email"
+                />
+                <TextField 
+                  id="kontakt_tel" 
+                  label="Kontakt: Telefon" 
+                  value={data.kontakt_tel} 
+                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('kontakt_tel', fn)}
+                />
+                <TextField 
+                  id="kontakt_web" 
+                  label="Kontakt: Website" 
+                  value={data.kontakt_web} 
+                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('kontakt_web', fn)}
                 />
               </div>
             </section>
@@ -623,7 +631,15 @@ function AppProfessional({
                   type="number"
                   min="0"
                   max="10"
+                  className="maklercourtage-field"
+                  style={{ maxWidth: '220px', minWidth: '180px' }}
                 />
+                {/* Maklercourtage in EUR anzeigen, wenn Wert vorhanden */}
+                {data.verkaufspreis && data.maklercourtage && (
+                  <div style={{ marginTop: '4px', fontSize: '1rem', color: '#444' }}>
+                    Maklercourtage: {((parseFloat(data.verkaufspreis) * parseFloat(data.maklercourtage) / 100) || 0).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })}
+                  </div>
+                )}
 
                 {shouldShowField('ist_faktor') && (
                   <div className="form-group">
@@ -634,6 +650,11 @@ function AppProfessional({
                       readOnly
                       placeholder="Wird automatisch berechnet"
                     />
+                    {data.ist_miete && data.verkaufspreis && (
+                      <div className="faktor-berechnung-hinweis">
+                        <small>Berechnung: Verkaufspreis / IST-Miete</small>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -646,6 +667,11 @@ function AppProfessional({
                       readOnly
                       placeholder="Wird automatisch berechnet"
                     />
+                    {data.soll_miete && data.verkaufspreis && (
+                      <div className="faktor-berechnung-hinweis">
+                        <small>Berechnung: Verkaufspreis / SOLL-Miete</small>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -802,109 +828,35 @@ function AppProfessional({
                 <button className="btn btn-secondary">
                   💾 Entwurf speichern
                 </button>
-                <button 
-                  className="btn btn-secondary"
-                  onClick={() => setShowPDF(true)}
-                >
-                  📧 PDF generieren
-                </button>
               </div>
 
-              {/* Inline-Vorschau - identisch mit der Modal-Vorschau */}
               <div className="expose-preview-inline">
-                {/* Header */}
-                <div className="expose-header">
-                  <h1 className="expose-title">{data.titel || 'Immobilien-Exposé'}</h1>
-                  <div className="expose-address">{data.adresse}</div>
-                </div>
-
-                {/* Key Facts */}
-                {(data.verkaufspreis || data.wohnflaeche || data.baujahr) && (
-                  <div className="key-facts">
-                    <h3>🔑 Eckdaten</h3>
-                    <div className="facts-grid">
-                      {data.verkaufspreis && (
-                        <div className="fact-item">
-                          <div className="fact-label">Kaufpreis</div>
-                          <div className="fact-value">{parseInt(data.verkaufspreis).toLocaleString()} €</div>
-                        </div>
-                      )}
-                      {data.wohnflaeche && (
-                        <div className="fact-item">
-                          <div className="fact-label">Wohnfläche</div>
-                          <div className="fact-value">{data.wohnflaeche} m²</div>
-                        </div>
-                      )}
-                      {data.baujahr && (
-                        <div className="fact-item">
-                          <div className="fact-label">Baujahr</div>
-                          <div className="fact-value">{data.baujahr}</div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Photos */}
-                {photos.length > 0 && (
-                  <div className="expose-section">
-                    <h3>📸 Bilder</h3>
-                    <div className="expose-photos">
-                      <div className="main-photo photo-container">
-                        <img src={photos[0]} alt="Hauptfoto" style={{width: '100%', height: 'auto', maxHeight: '300px', objectFit: 'cover'}} />
-                        {data.watermark_text && (
-                          <>
-                            <div className="photo-watermark">{data.watermark_text}</div>
-                            <div className="photo-watermark-1">{data.watermark_text}</div>
-                            <div className="photo-watermark-2">{data.watermark_text}</div>
-                            <div className="photo-watermark-3">{data.watermark_text}</div>
-                            <div className="photo-watermark-4">{data.watermark_text}</div>
-                          </>
-                        )}
-                      </div>
-                      {photos.slice(1, 5).length > 0 && (
-                        <div className="thumbnail-photos" style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
-                          {photos.slice(1, 5).map((photo, index) => (
-                            <div key={index} className="thumbnail-container photo-container" style={{flex: '1', maxWidth: '120px'}}>
-                              <img src={photo} alt={`Foto ${index + 2}`} style={{width: '100%', height: '80px', objectFit: 'cover'}} />
-                              {data.watermark_text && (
-                                <>
-                                  <div className="photo-watermark">{data.watermark_text}</div>
-                                  <div className="photo-watermark-1">{data.watermark_text}</div>
-                                  <div className="photo-watermark-2">{data.watermark_text}</div>
-                                </>
-                              )}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                {/* Beschreibung */}
-                {data.kurzbeschreibung && (
-                  <div className="expose-section">
-                    <h3>📝 Kurzbeschreibung</h3>
-                    <div className="description-text">
-                      {data.kurzbeschreibung.split('\n').map((line: string, index: number) => (
-                        <p key={index}>{line}</p>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                <ExposePreview
+                  data={data}
+                  photos={photos}
+                  logo={logo}
+                  theme={theme}
+                  includeOriginalImages={includeOriginalImages}
+                  showAgentNotices={showAgentNotices}
+                />
               </div>
             </section>
           )}
         </main>
 
         {showPreview && (
-          <TextPreviewModal
-            data={data}
-            photos={photos}
-            isOpen={showPreview}
-            onClose={() => setShowPreview(false)}
-          />
+          <Suspense fallback={<div style={{padding: '2rem'}}>Lade Vorschau…</div>}>
+            <TextPreviewModalLazy
+              data={data}
+              photos={photos}
+              logo={logo}
+              theme={theme}
+              includeOriginalImages={includeOriginalImages}
+              showAgentNotices={showAgentNotices}
+              isOpen={showPreview}
+              onClose={() => setShowPreview(false)}
+            />
+          </Suspense>
         )}
 
         {showPDF && (
@@ -912,14 +864,16 @@ function AppProfessional({
             <div className="pdf-modal-content">
               <div className="pdf-modal-header">
                 <h2>📄 PDF-Vorschau</h2>
-                <button 
+                <button
                   className="btn btn-secondary"
                   onClick={() => setShowPDF(false)}
                 >
                   ✕ Schließen
                 </button>
               </div>
-              <ExposePDF data={data} photos={photos} />
+              <Suspense fallback={<div style={{padding: '2rem'}}>Lade PDF-Komponente…</div>}>
+                <ExposePDFLazy data={data} photos={photos} logo={logo || undefined} theme={theme} includeOriginalImages={includeOriginalImages} showAgentNotices={showAgentNotices} />
+              </Suspense>
             </div>
           </div>
         )}

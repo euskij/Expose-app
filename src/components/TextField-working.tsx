@@ -10,6 +10,8 @@ interface TextFieldProps {
   type?: string;
   min?: string;
   max?: string;
+    className?: string;
+    style?: React.CSSProperties;
 }
 
 export function TextField({ 
@@ -21,7 +23,9 @@ export function TextField({
   pattern,
   type = "text",
   min,
-  max
+  max,
+  className = '',
+  style = {}
 }: TextFieldProps) {
   const [error, setError] = useState<string>("");
   const [showAI, setShowAI] = useState(false);
@@ -71,7 +75,7 @@ export function TextField({
   };
 
   return (
-    <div className="form-group">
+      <div className={`form-group ${className}`} style={style}>
       <label className="ui-label" htmlFor={id}>
         {label}
         {required && <span className="required">*</span>}

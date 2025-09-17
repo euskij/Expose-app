@@ -13,7 +13,7 @@ Die App ist deployed auf: [Wird nach Deployment verfügbar sein]
 ### Lokaler Build-Test
 ```bash
 npm install
-npm run build:production
+npm run build
 npm run preview
 ```
 
@@ -38,6 +38,27 @@ vercel
 1. Push den Code zu GitHub
 2. Gehe zu https://vercel.com
 3. "New Project" → GitHub Repository importieren
+
+### Wichtige Hinweise
+- **Lazy Load:** PDF-Komponenten werden per React.lazy und dynamischem Import geladen. Dadurch ist das Initial-Bundle klein, PDF-Generierung funktioniert trotzdem zuverlässig.
+- **Chunking:** Vercel erkennt automatisch Vite und splittet die Chunks. Die PDF-Komponenten und @react-pdf/renderer werden erst bei Bedarf geladen.
+- **Build Settings:**
+	- Build Command: `npm run build`
+	- Output Directory: `dist`
+	- Node Version: 18+
+	- Framework: Vite (wird automatisch erkannt)
+- **Troubleshooting:**
+	- Bei Fehlern im Build: Prüfe, ob alle Klammern und JSX-Blöcke korrekt sind.
+	- Bei PDF-Fehlern: Stelle sicher, dass @react-pdf/renderer nur in Lazy-Chunks importiert wird (siehe src/App-professional.tsx und src/components/ExposePDF.tsx).
+	- Bei zu großem Bundle: Prüfe, ob keine alten Komponenten oder Testdateien mehr enthalten sind.
+
+### Nach dem Deployment
+- Die App ist sofort unter der Vercel-URL erreichbar.
+- PDF-Generierung und Vorschau funktionieren auch im Deployment, da die dynamischen Chunks korrekt ausgeliefert werden.
+
+### Performance-Tipp
+- Die Initial-Ladezeit ist durch Lazy Load optimiert.
+- Große PDF-Bibliotheken werden erst bei Bedarf geladen (z. B. bei Vorschau oder Download).
 4. expose-app auswählen
 5. Deploy (verwendet automatisch vercel.json Konfiguration)
 

@@ -158,7 +158,8 @@ const defaultData = {
   ist_miete: "24.000 €/Jahr",
   soll_miete: "28.000 €/Jahr",
   verkaufspreis: "749.000 €",
-  faktor: "31,2",
+  ist_faktor: "31,2",
+  soll_faktor: "",
   maklercourtage: "3,57% inkl. MwSt.",
   // Typ-spezifisch
   zimmer: "4",
@@ -168,7 +169,7 @@ const defaultData = {
   letzte_sanierung: "2022",
   kontakt_name: "Max Mustermann",
   kontakt_tel: "+49 123 456789",
-  kontakt_mail: "immos@example.com",
+  kontakt_email: "immos@example.com",
 };
 const TYPEN = [
   { value: "wohnung", label: "Wohnung" },
@@ -238,11 +239,12 @@ export default function App() {
     ist_miete: '',
     soll_miete: '',
     verkaufspreis: '',
-    faktor: '',
+  ist_faktor: '',
+  soll_faktor: '',
     maklercourtage: '',
     kontakt_name: '',
     kontakt_tel: '',
-    kontakt_mail: '',
+  kontakt_email: '',
     zimmer: '',
     etage: '',
     etagenanzahl: '',
