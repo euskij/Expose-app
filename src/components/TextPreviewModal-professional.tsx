@@ -112,9 +112,23 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
                   <div className="main-photo photo-container">
                     <img src={photos[0]} alt="Hauptfoto" />
                     {data.watermark_text && (
-                      <div className="photo-watermark">
-                        {data.watermark_text}
-                      </div>
+                      <>
+                        <div className="photo-watermark">
+                          {data.watermark_text}
+                        </div>
+                        <div className="photo-watermark-1">
+                          {data.watermark_text}
+                        </div>
+                        <div className="photo-watermark-2">
+                          {data.watermark_text}
+                        </div>
+                        <div className="photo-watermark-3">
+                          {data.watermark_text}
+                        </div>
+                        <div className="photo-watermark-4">
+                          {data.watermark_text}
+                        </div>
+                      </>
                     )}
                   </div>
                   {photos.slice(1, 5).length > 0 && (
@@ -123,9 +137,17 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
                         <div key={index} className="thumbnail-container photo-container">
                           <img src={photo} alt={`Foto ${index + 2}`} />
                           {data.watermark_text && (
-                            <div className="photo-watermark">
-                              {data.watermark_text}
-                            </div>
+                            <>
+                              <div className="photo-watermark">
+                                {data.watermark_text}
+                              </div>
+                              <div className="photo-watermark-1">
+                                {data.watermark_text}
+                              </div>
+                              <div className="photo-watermark-2">
+                                {data.watermark_text}
+                              </div>
+                            </>
                           )}
                         </div>
                       ))}

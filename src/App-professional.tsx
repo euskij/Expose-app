@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { TextField } from './components/TextField-working';
 import { EnergieausweisUpload } from './components/EnergieausweisUpload';
 import { TextPreviewModal } from './components/TextPreviewModal-professional';
+import { ExposePDF } from './components/ExposePDF';
 import './styles-business.css';
 
 interface ImmobilienData {
@@ -160,6 +161,7 @@ function AppProfessional({
   const [photos, setPhotos] = useState<string[]>(initialPhotos || []);
   const [activeTab, setActiveTab] = useState('grunddaten');
   const [showPreview, setShowPreview] = useState(false);
+  const [showPDF, setShowPDF] = useState(false);
   const [generatedTexts, setGeneratedTexts] = useState<any>({});
 
   // Lade initialData wenn sich diese ändert
@@ -800,7 +802,10 @@ function AppProfessional({
                 <button className="btn btn-secondary">
                   💾 Entwurf speichern
                 </button>
-                <button className="btn btn-secondary">
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => setShowPDF(true)}
+                >
                   📧 PDF generieren
                 </button>
               </div>
@@ -839,6 +844,23 @@ function AppProfessional({
             isOpen={showPreview}
             onClose={() => setShowPreview(false)}
           />
+        )}
+
+        {showPDF && (
+          <div className="pdf-modal">
+            <div className="pdf-modal-content">
+              <div className="pdf-modal-header">
+                <h2>📄 PDF-Vorschau</h2>
+                <button 
+                  className="btn btn-secondary"
+                  onClick={() => setShowPDF(false)}
+                >
+                  ✕ Schließen
+                </button>
+              </div>
+              <ExposePDF data={data} photos={photos} />
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -403,11 +403,84 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) rotate(-45deg);
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.8rem;
   font-weight: bold;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-  background: rgba(0, 0, 0, 0.3);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 10;
+}
+
+/* Multiple watermarks for better coverage */
+.photo-watermark-1 {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 10;
+}
+
+.photo-watermark-2 {
+  position: absolute;
+  top: 25%;
+  right: 25%;
+  transform: translate(50%, -50%) rotate(-45deg);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 10;
+}
+
+.photo-watermark-3 {
+  position: absolute;
+  top: 75%;
+  left: 25%;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
+  padding: 8px 16px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 10;
+}
+
+.photo-watermark-4 {
+  position: absolute;
+  top: 75%;
+  right: 25%;
+  transform: translate(50%, -50%) rotate(-45deg);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.2);
   padding: 8px 16px;
   border-radius: 4px;
   white-space: nowrap;
@@ -417,7 +490,15 @@
 }
 
 .thumbnail-container .photo-watermark {
-  font-size: 0.7rem;
+  font-size: 1.0rem;
+  padding: 4px 8px;
+}
+
+.thumbnail-container .photo-watermark-1,
+.thumbnail-container .photo-watermark-2,
+.thumbnail-container .photo-watermark-3,
+.thumbnail-container .photo-watermark-4 {
+  font-size: 1.0rem;
   padding: 4px 8px;
 }
 
@@ -1200,9 +1281,45 @@
     grid-template-columns: 1fr;
     gap: 12px;
     padding: 12px;
-  }
-  
   .facts-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* PDF Modal */
+.pdf-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.pdf-modal-content {
+  background: white;
+  border-radius: 8px;
+  width: 95vw;
+  height: 95vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pdf-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e9ecef;
+  background: #f8f9fa;
+}
+
+.pdf-modal-header h2 {
+  margin: 0;
+  color: #2c3e50;
 }
