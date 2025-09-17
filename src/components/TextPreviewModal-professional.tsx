@@ -19,41 +19,241 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
       const { saveAs } = await import('file-saver');
       const { Document, Page, Text, View, StyleSheet, Image } = await import('@react-pdf/renderer');
       
-      // Inline PDF Document Definition (vereinfacht)
+      // Professionelle PDF-Styles basierend auf der Vorschau
       const styles = StyleSheet.create({
-        page: { padding: 30, fontSize: 12, fontFamily: 'Helvetica' },
-        title: { fontSize: 20, marginBottom: 20, textAlign: 'center', fontWeight: 'bold' },
-        section: { marginBottom: 15 },
-        text: { marginBottom: 5 },
-        grid: { display: 'flex', flexDirection: 'row', flexWrap: 'wrap' },
-        gridItem: { width: '50%', marginBottom: 10 },
-        image: { width: 200, height: 150, marginBottom: 10, marginRight: 10 }
+        page: { 
+          padding: 40, 
+          fontSize: 11, 
+          fontFamily: 'Helvetica',
+          backgroundColor: '#ffffff'
+        },
+        header: {
+          marginBottom: 30,
+          borderBottom: '2px solid #2c3e50',
+          paddingBottom: 20
+        },
+        title: { 
+          fontSize: 24, 
+          fontWeight: 'bold',
+          color: '#2c3e50',
+          marginBottom: 8
+        },
+        address: {
+          fontSize: 14,
+          color: '#555',
+          fontStyle: 'italic'
+        },
+        section: { 
+          marginBottom: 25 
+        },
+        sectionTitle: {
+          fontSize: 16,
+          fontWeight: 'bold',
+          color: '#2c3e50',
+          marginBottom: 12,
+          borderBottom: '1px solid #e9ecef',
+          paddingBottom: 5
+        },
+        keyFactsContainer: {
+          backgroundColor: '#f8f9fa',
+          padding: 15,
+          borderRadius: 8,
+          marginBottom: 20
+        },
+        keyFactsTitle: {
+          fontSize: 14,
+          fontWeight: 'bold',
+          color: '#2c3e50',
+          marginBottom: 10
+        },
+        keyFactsGrid: {
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap'
+        },
+        keyFact: {
+          width: '33.33%',
+          marginBottom: 8
+        },
+        keyFactLabel: {
+          fontSize: 9,
+          color: '#666',
+          marginBottom: 2
+        },
+        keyFactValue: {
+          fontSize: 12,
+          fontWeight: 'bold',
+          color: '#2c3e50'
+        },
+        tableRow: {
+          display: 'flex',
+          flexDirection: 'row',
+          borderBottom: '1px solid #e9ecef',
+          paddingVertical: 6
+        },
+        tableLabel: {
+          width: '40%',
+          fontSize: 10,
+          color: '#666',
+          fontWeight: 'bold'
+        },
+        tableValue: {
+          width: '60%',
+          fontSize: 10,
+          color: '#2c3e50'
+        },
+        description: {
+          fontSize: 10,
+          lineHeight: 1.5,
+          color: '#2c3e50',
+          marginBottom: 8
+        },
+        imageSection: {
+          marginTop: 20
+        },
+        imageGrid: {
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: 10
+        },
+        image: {
+          width: 120,
+          height: 90,
+          objectFit: 'cover',
+          border: '1px solid #e9ecef'
+        },
+        watermark: {
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          transform: 'rotate(-45deg)',
+          opacity: 0.05,
+          fontSize: 48,
+          color: '#ffffff',
+          fontWeight: 'bold',
+          zIndex: -1
+        }
       });
+
+      // Formatierung-Funktionen
+      const formatPrice = (price: string) => {
+        if (!price || price === '0' || price === '-') return null;
+        const numValue = parseFloat(price.replace(/[^\d,.-]/g, '').replace(',', '.'));
+        if (isNaN(numValue)) return price;
+        return new Intl.NumberFormat('de-DE', {
+          style: 'currency',
+          currency: 'EUR',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(numValue);
+      };
+
+      const isFieldEmpty = (value: string) => {
+        return !value || value === '0' || value === '-' || value.trim() === '';
+      };
+
+      // Key Facts (nur die wichtigsten 3)
+      const keyFacts = [
+        { label: 'Kaufpreis', value: formatPrice(data.verkaufspreis) },
+        { label: 'Wohnfläche', value: data.wohnflaeche ? `${data.wohnflaeche} m²` : null },
+        { label: 'Baujahr', value: data.baujahr }
+      ].filter(fact => fact.value);
+
+      // Alle anderen Daten für Tabelle
+      const tableData = [
+        { label: 'Objekttyp', value: data.objektTyp },
+        { label: 'Zimmer', value: data.zimmer },
+        { label: 'Badezimmer', value: data.badezimmer },
+        { label: 'Grundstücksfläche', value: data.grundstuecksflaeche ? `${data.grundstuecksflaeche} m²` : '' },
+        { label: 'Heizungsart', value: data.heizungsart },
+        { label: 'Energieträger', value: data.energietraeger },
+        { label: 'Bauzustand', value: data.bauzustand },
+        { label: 'Balkone', value: data.balkone },
+        { label: 'Garage', value: data.garage },
+        { label: 'Keller', value: data.keller },
+        { label: 'Maklercourtage', value: data.maklercourtage }
+      ].filter(item => !isFieldEmpty(item.value));
 
       const doc = (
         <Document>
           <Page size="A4" style={styles.page}>
-            <Text style={styles.title}>{data.titel || 'Immobilien-Exposé'}</Text>
-            
-            <View style={styles.section}>
-              <Text style={styles.text}>Adresse: {data.adresse}</Text>
-              <Text style={styles.text}>Objekttyp: {data.objektTyp}</Text>
-              <Text style={styles.text}>Kaufpreis: {data.verkaufspreis}</Text>
-              <Text style={styles.text}>Wohnfläche: {data.wohnflaeche} m²</Text>
-              <Text style={styles.text}>Baujahr: {data.baujahr}</Text>
-            </View>
-
-            {data.kurzbeschreibung && (
-              <View style={styles.section}>
-                <Text style={styles.text}>Beschreibung: {data.kurzbeschreibung}</Text>
+            {/* Watermark Background */}
+            {data.watermark_text && (
+              <View style={styles.watermark}>
+                <Text>{data.watermark_text}</Text>
               </View>
             )}
 
-            {photos.length > 0 && (
+            {/* Header */}
+            <View style={styles.header}>
+              <Text style={styles.title}>{data.titel || 'Immobilien-Exposé'}</Text>
+              <Text style={styles.address}>{data.adresse}</Text>
+            </View>
+
+            {/* Key Facts */}
+            {keyFacts.length > 0 && (
+              <View style={styles.keyFactsContainer}>
+                <Text style={styles.keyFactsTitle}>🔑 Eckdaten</Text>
+                <View style={styles.keyFactsGrid}>
+                  {keyFacts.map((fact, index) => (
+                    <View key={index} style={styles.keyFact}>
+                      <Text style={styles.keyFactLabel}>{fact.label}</Text>
+                      <Text style={styles.keyFactValue}>{fact.value}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
+
+            {/* Beschreibung */}
+            {data.kurzbeschreibung && (
               <View style={styles.section}>
-                <Text style={styles.text}>Bilder:</Text>
-                <View style={styles.grid}>
-                  {photos.slice(0, 4).map((photo, index) => (
+                <Text style={styles.sectionTitle}>📝 Beschreibung</Text>
+                <Text style={styles.description}>{data.kurzbeschreibung}</Text>
+              </View>
+            )}
+
+            {/* Detaildaten */}
+            {tableData.length > 0 && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>📊 Detaildaten</Text>
+                {tableData.map((row, index) => (
+                  <View key={index} style={styles.tableRow}>
+                    <Text style={styles.tableLabel}>{row.label}:</Text>
+                    <Text style={styles.tableValue}>{row.value}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
+
+            {/* Ausstattung */}
+            {data.ausstattung && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>⚙️ Ausstattung</Text>
+                <Text style={styles.description}>{data.ausstattung}</Text>
+              </View>
+            )}
+
+            {/* Lage */}
+            {data.lage_beschreibung && (
+              <View style={styles.section}>
+                <Text style={styles.sectionTitle}>📍 Lage</Text>
+                <Text style={styles.description}>{data.lage_beschreibung}</Text>
+              </View>
+            )}
+
+            {/* Bilder */}
+            {photos.length > 0 && (
+              <View style={styles.imageSection}>
+                <Text style={styles.sectionTitle}>📸 Bilder</Text>
+                <View style={styles.imageGrid}>
+                  {photos.slice(0, 6).map((photo, index) => (
                     <Image key={index} src={photo} style={styles.image} />
                   ))}
                 </View>

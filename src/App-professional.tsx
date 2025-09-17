@@ -810,28 +810,89 @@ function AppProfessional({
                 </button>
               </div>
 
-              <div className="preview-summary">
-                <h3>📋 Zusammenfassung</h3>
-                <div className="summary-grid">
-                  <div className="summary-item">
-                    <strong>Titel:</strong> {data.titel || 'Nicht ausgefüllt'}
-                  </div>
-                  <div className="summary-item">
-                    <strong>Objekttyp:</strong> {data.objektTyp}
-                  </div>
-                  <div className="summary-item">
-                    <strong>Adresse:</strong> {data.adresse || 'Nicht ausgefüllt'}
-                  </div>
-                  <div className="summary-item">
-                    <strong>Wohnfläche:</strong> {data.wohnflaeche ? `${data.wohnflaeche}m²` : 'Nicht ausgefüllt'}
-                  </div>
-                  <div className="summary-item">
-                    <strong>Verkaufspreis:</strong> {data.verkaufspreis ? `${parseInt(data.verkaufspreis).toLocaleString()}€` : 'Nicht ausgefüllt'}
-                  </div>
-                  <div className="summary-item">
-                    <strong>Fotos:</strong> {photos.length} hochgeladen
-                  </div>
+              {/* Inline-Vorschau - identisch mit der Modal-Vorschau */}
+              <div className="expose-preview-inline">
+                {/* Header */}
+                <div className="expose-header">
+                  <h1 className="expose-title">{data.titel || 'Immobilien-Exposé'}</h1>
+                  <div className="expose-address">{data.adresse}</div>
                 </div>
+
+                {/* Key Facts */}
+                {(data.verkaufspreis || data.wohnflaeche || data.baujahr) && (
+                  <div className="key-facts">
+                    <h3>🔑 Eckdaten</h3>
+                    <div className="facts-grid">
+                      {data.verkaufspreis && (
+                        <div className="fact-item">
+                          <div className="fact-label">Kaufpreis</div>
+                          <div className="fact-value">{parseInt(data.verkaufspreis).toLocaleString()} €</div>
+                        </div>
+                      )}
+                      {data.wohnflaeche && (
+                        <div className="fact-item">
+                          <div className="fact-label">Wohnfläche</div>
+                          <div className="fact-value">{data.wohnflaeche} m²</div>
+                        </div>
+                      )}
+                      {data.baujahr && (
+                        <div className="fact-item">
+                          <div className="fact-label">Baujahr</div>
+                          <div className="fact-value">{data.baujahr}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Photos */}
+                {photos.length > 0 && (
+                  <div className="expose-section">
+                    <h3>📸 Bilder</h3>
+                    <div className="expose-photos">
+                      <div className="main-photo photo-container">
+                        <img src={photos[0]} alt="Hauptfoto" style={{width: '100%', height: 'auto', maxHeight: '300px', objectFit: 'cover'}} />
+                        {data.watermark_text && (
+                          <>
+                            <div className="photo-watermark">{data.watermark_text}</div>
+                            <div className="photo-watermark-1">{data.watermark_text}</div>
+                            <div className="photo-watermark-2">{data.watermark_text}</div>
+                            <div className="photo-watermark-3">{data.watermark_text}</div>
+                            <div className="photo-watermark-4">{data.watermark_text}</div>
+                          </>
+                        )}
+                      </div>
+                      {photos.slice(1, 5).length > 0 && (
+                        <div className="thumbnail-photos" style={{display: 'flex', gap: '10px', marginTop: '10px'}}>
+                          {photos.slice(1, 5).map((photo, index) => (
+                            <div key={index} className="thumbnail-container photo-container" style={{flex: '1', maxWidth: '120px'}}>
+                              <img src={photo} alt={`Foto ${index + 2}`} style={{width: '100%', height: '80px', objectFit: 'cover'}} />
+                              {data.watermark_text && (
+                                <>
+                                  <div className="photo-watermark">{data.watermark_text}</div>
+                                  <div className="photo-watermark-1">{data.watermark_text}</div>
+                                  <div className="photo-watermark-2">{data.watermark_text}</div>
+                                </>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Beschreibung */}
+                {data.kurzbeschreibung && (
+                  <div className="expose-section">
+                    <h3>📝 Kurzbeschreibung</h3>
+                    <div className="description-text">
+                      {data.kurzbeschreibung.split('\n').map((line: string, index: number) => (
+                        <p key={index}>{line}</p>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </section>
           )}
