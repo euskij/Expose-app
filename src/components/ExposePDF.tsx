@@ -164,6 +164,59 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 5,
   },
+  
+  // Watermark Hintergrund
+  watermarkBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: -1,
+    overflow: 'hidden',
+  },
+  watermarkText: {
+    position: 'absolute',
+    fontSize: 48,
+    color: '#f5f5f5',
+    fontWeight: 'bold',
+    opacity: 0.1,
+    transform: 'rotate(-45deg)',
+    transformOrigin: 'center',
+    userSelect: 'none',
+    pointerEvents: 'none',
+  },
+  
+  // Foto mit Watermark
+  imageContainer: {
+    position: 'relative',
+    width: '48%',
+    height: 180,
+    marginBottom: 10,
+  },
+  imageWithWatermark: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    borderRadius: 4,
+  },
+  photoWatermark: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    fontSize: 20,
+    color: '#ffffff',
+    fontWeight: 'bold',
+    opacity: 0.7,
+    transform: 'translate(-50%, -50%) rotate(-45deg)',
+    transformOrigin: 'center',
+    textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+    userSelect: 'none',
+    pointerEvents: 'none',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    padding: '8px 16px',
+    borderRadius: 4,
+  },
 });
 
 interface ExposePDFProps {
@@ -236,10 +289,50 @@ export function ExposePDF({ data, photos, color = '#3498db' }: ExposePDFProps) {
     );
   };
 
+  // Generiere Watermark-Positionen für Hintergrund
+  const generateWatermarkPositions = () => {
+    const positions = [];
+    const watermarkText = data.watermark_text || 'EXPOSÉ';
+    
+    // Erstelle ein Raster von Watermarks über die ganze Seite
+    for (let x = 0; x < 600; x += 200) {
+      for (let y = 0; y < 800; y += 150) {
+        positions.push({
+          text: watermarkText,
+          left: x,
+          top: y,
+        });
+      }
+    }
+    return positions;
+  };
+
+  const watermarkPositions = generateWatermarkPositions();
+
   return (
     <PDFViewer style={{ width: '100%', height: '100vh' }}>
       <Document>
         <Page size="A4" style={styles.page}>
+          {/* Watermark Hintergrund */}
+          {data.watermark_text && (
+            <View style={styles.watermarkBackground}>
+              {watermarkPositions.map((pos, index) => (
+                <Text
+                  key={index}
+                  style={[
+                    styles.watermarkText,
+                    {
+                      left: pos.left,
+                      top: pos.top,
+                    }
+                  ]}
+                >
+                  {pos.text}
+                </Text>
+              ))}
+            </View>
+          )}
+
           {/* Header */}
           <View style={styles.header}>
             <Text style={[styles.title, { color }]}>{formatValue(data.titel)}</Text>
@@ -271,7 +364,14 @@ export function ExposePDF({ data, photos, color = '#3498db' }: ExposePDFProps) {
               <Text style={styles.sectionTitle}>Bilder</Text>
               <View style={styles.imageGrid}>
                 {photos.slice(0, 6).map((photo, index) => (
-                  <Image key={index} src={photo} style={styles.image} />
+                  <View key={index} style={styles.imageContainer}>
+                    <Image src={photo} style={styles.imageWithWatermark} />
+                    {data.watermark_text && (
+                      <Text style={styles.photoWatermark}>
+                        {data.watermark_text}
+                      </Text>
+                    )}
+                  </View>
                 ))}
               </View>
             </View>

@@ -109,13 +109,25 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
               <div className="expose-section">
                 <h3>📸 Bilder</h3>
                 <div className="expose-photos">
-                  <div className="main-photo">
+                  <div className="main-photo photo-container">
                     <img src={photos[0]} alt="Hauptfoto" />
+                    {data.watermark_text && (
+                      <div className="photo-watermark">
+                        {data.watermark_text}
+                      </div>
+                    )}
                   </div>
                   {photos.slice(1, 5).length > 0 && (
                     <div className="thumbnail-photos">
                       {photos.slice(1, 5).map((photo, index) => (
-                        <img key={index} src={photo} alt={`Foto ${index + 2}`} />
+                        <div key={index} className="thumbnail-container photo-container">
+                          <img src={photo} alt={`Foto ${index + 2}`} />
+                          {data.watermark_text && (
+                            <div className="photo-watermark">
+                              {data.watermark_text}
+                            </div>
+                          )}
+                        </div>
                       ))}
                     </div>
                   )}
