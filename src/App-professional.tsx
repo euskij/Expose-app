@@ -48,16 +48,16 @@ function App() {
   // Universelle Felder (für alle Objekttypen sichtbar)
   const universalFields = [
     'titel', 'adresse', 'lage', 'objektTyp', 'baujahr', 'wohnflaeche', 
-    'zimmer', 'badezimmer', 'verkaufspreis', 'heizungsart', 'bauzustand',
+    'verkaufspreis', 'heizungsart', 'bauzustand',
     'kurzbeschreibung', 'langbeschreibung', 'ausstattung', 'lage_beschreibung'
   ];
 
   // Objekttyp-spezifische Felder
   const typeSpecificFields = {
-    wohnung: ['balkone', 'ist_miete', 'soll_miete', 'nebenkosten', 'heizkosten'],
+    wohnung: ['zimmer', 'badezimmer', 'balkone', 'ist_miete', 'soll_miete', 'nebenkosten', 'heizkosten'],
     mehrfamilienhaus: ['grundstuecksflaeche', 'ist_miete', 'soll_miete', 'nebenkosten', 'heizkosten', 'faktor', 'garage', 'keller'],
-    einfamilienhaus: ['grundstuecksflaeche', 'garage', 'keller', 'balkone'],
-    doppelhaushälfte: ['grundstuecksflaeche', 'garage', 'keller', 'balkone']
+    einfamilienhaus: ['zimmer', 'badezimmer', 'grundstuecksflaeche', 'garage', 'keller', 'balkone'],
+    doppelhaushälfte: ['zimmer', 'badezimmer', 'grundstuecksflaeche', 'garage', 'keller', 'balkone']
   };
 
   // Funktion zum Prüfen ob ein Feld angezeigt werden soll
@@ -223,23 +223,27 @@ function App() {
                   onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('lage', fn)}
                 />
 
-                <TextField 
-                  id="zimmer" 
-                  label="Anzahl Zimmer" 
-                  value={data.zimmer} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('zimmer', fn)}
-                  type="number"
-                  min="1"
-                />
+                {shouldShowField('zimmer') && (
+                  <TextField 
+                    id="zimmer" 
+                    label="Anzahl Zimmer" 
+                    value={data.zimmer} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('zimmer', fn)}
+                    type="number"
+                    min="1"
+                  />
+                )}
 
-                <TextField 
-                  id="badezimmer" 
-                  label="Anzahl Badezimmer" 
-                  value={data.badezimmer} 
-                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('badezimmer', fn)}
-                  type="number"
-                  min="1"
-                />
+                {shouldShowField('badezimmer') && (
+                  <TextField 
+                    id="badezimmer" 
+                    label="Anzahl Badezimmer" 
+                    value={data.badezimmer} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('badezimmer', fn)}
+                    type="number"
+                    min="1"
+                  />
+                )}
               </div>
             </section>
           )}
