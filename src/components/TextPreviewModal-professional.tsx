@@ -15,9 +15,28 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
+  // Funktion zum Prüfen ob ein Feld leer/null ist
+  const isFieldEmpty = (value: string): boolean => {
+    return !value || value === '0' || value === '-' || value.trim() === '';
+  };
+
+  // Funktion zum Formatieren von Preisen
   const formatPrice = (price: string) => {
-    if (!price) return '--';
+    if (isFieldEmpty(price)) return null;
     return parseInt(price).toLocaleString() + '€';
+  };
+
+  // Funktion zum Anzeigen eines Feldes nur wenn es nicht leer ist
+  const renderField = (label: string, value: string, formatter?: (v: string) => string | null) => {
+    const formattedValue = formatter ? formatter(value) : value;
+    if (isFieldEmpty(value) || formattedValue === null) return null;
+    
+    return (
+      <div className="fact-item">
+        <span className="fact-label">{label}:</span>
+        <span className="fact-value">{formattedValue}</span>
+      </div>
+    );
   };
 
   return (
@@ -56,37 +75,45 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
             )}
 
             {/* Key Facts */}
-            <div className="key-facts">
-              <h3>📊 Eckdaten</h3>
+            <div className="expose-section">
+              <h3>� Eckdaten</h3>
               <div className="facts-grid">
-                <div className="fact-item">
-                  <span className="fact-label">Wohnfläche:</span>
-                  <span className="fact-value">{data.wohnflaeche ? `${data.wohnflaeche}m²` : '--'}</span>
-                </div>
-                <div className="fact-item">
-                  <span className="fact-label">Zimmer:</span>
-                  <span className="fact-value">{data.zimmer || '--'}</span>
-                </div>
-                <div className="fact-item">
-                  <span className="fact-label">Baujahr:</span>
-                  <span className="fact-value">{data.baujahr || '--'}</span>
-                </div>
-                <div className="fact-item">
-                  <span className="fact-label">Verkaufspreis:</span>
-                  <span className="fact-value">{formatPrice(data.verkaufspreis)}</span>
-                </div>
-                {data.ist_miete && (
+                {renderField('Wohnfläche', data.wohnflaeche, (v) => `${v}m²`)}
+                {renderField('Zimmer', data.zimmer)}
+                {renderField('Badezimmer', data.badezimmer)}
+                {renderField('Baujahr', data.baujahr)}
+                {renderField('Verkaufspreis', data.verkaufspreis, formatPrice)}
+                {renderField('IST-Miete', data.ist_miete, (v) => formatPrice(v) + '/Monat')}
+                {renderField('SOLL-Miete', data.soll_miete, (v) => formatPrice(v) + '/Monat')}
+                {renderField('Betriebskosten/Hausgeld', data.betriebskosten_hausgeld, (v) => formatPrice(v) + '/Monat')}
+                {renderField('Grundstücksfläche', data.grundstuecksflaeche, (v) => `${v}m²`)}
+                {renderField('Anzahl Garagen', data.anzahl_garagen)}
+                {renderField('Anzahl Stellplätze', data.anzahl_stellplaetze)}
+                {renderField('IST-Faktor', data.ist_faktor)}
+                {renderField('SOLL-Faktor', data.soll_faktor)}
+                {renderField('Balkone', data.balkone)}
+                {renderField('Heizungsart', data.heizungsart)}
+                {renderField('Bauzustand', data.bauzustand)}
+                {data.garage === 'ja' && (
                   <div className="fact-item">
-                    <span className="fact-label">Miete:</span>
-                    <span className="fact-value">{formatPrice(data.ist_miete)}/Monat</span>
+                    <span className="fact-label">Garage:</span>
+                    <span className="fact-value">Vorhanden</span>
                   </div>
                 )}
-                {data.nebenkosten && (
+                {data.keller === 'ja' && (
                   <div className="fact-item">
-                    <span className="fact-label">Nebenkosten:</span>
-                    <span className="fact-value">{formatPrice(data.nebenkosten)}/Monat</span>
+                    <span className="fact-label">Keller:</span>
+                    <span className="fact-value">Vorhanden</span>
                   </div>
                 )}
+                
+                {/* Mehrfamilienhaus-spezifische Felder */}
+                {renderField('Anzahl Wohnungen', data.anzahl_wohnungen)}
+                {renderField('Anzahl Gewerbeeinheiten', data.anzahl_gewerbeeinheiten)}
+                {renderField('Leerstehende Wohnungen', data.leerstehende_wohnungen)}
+                {renderField('Leerstehende Gewerbeeinheiten', data.leerstehende_gewerbe)}
+                {renderField('m² Leerstand Wohnungen', data.qm_leerstand_wohnungen, (v) => `${v}m²`)}
+                {renderField('m² Leerstand Gewerbe', data.qm_leerstand_gewerbe, (v) => `${v}m²`)}
               </div>
             </div>
 

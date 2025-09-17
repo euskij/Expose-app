@@ -35,9 +35,11 @@ interface ImmobilienData {
   verkaufspreis: string;
   ist_miete: string;
   soll_miete: string;
-  nebenkosten: string;
+  betriebskosten_hausgeld: string;
   maklercourtage: string;
-  faktor: string;
+  ist_faktor: string;
+  soll_faktor: string;
+  watermark_text: string;
   
   // Technische Details
   heizungsart: string;
@@ -58,13 +60,13 @@ function App() {
   const universalFields = [
     'titel', 'adresse', 'lage', 'objektTyp', 'baujahr', 'wohnflaeche', 
     'verkaufspreis', 'heizungsart', 'bauzustand', 'anzahl_garagen', 'anzahl_stellplaetze',
-    'kurzbeschreibung', 'langbeschreibung', 'ausstattung', 'lage_beschreibung'
+    'kurzbeschreibung', 'langbeschreibung', 'ausstattung', 'lage_beschreibung', 'watermark_text'
   ];
 
   // Objekttyp-spezifische Felder
   const typeSpecificFields = {
-    wohnung: ['zimmer', 'badezimmer', 'balkone', 'ist_miete', 'soll_miete', 'nebenkosten'],
-    mehrfamilienhaus: ['grundstuecksflaeche', 'ist_miete', 'soll_miete', 'nebenkosten', 'faktor', 'garage', 'keller', 
+    wohnung: ['zimmer', 'badezimmer', 'balkone', 'ist_miete', 'soll_miete', 'betriebskosten_hausgeld', 'ist_faktor', 'soll_faktor'],
+    mehrfamilienhaus: ['grundstuecksflaeche', 'ist_miete', 'soll_miete', 'ist_faktor', 'soll_faktor', 'garage', 'keller', 
                        'anzahl_wohnungen', 'anzahl_gewerbeeinheiten', 'leerstehende_wohnungen', 'leerstehende_gewerbe', 
                        'qm_leerstand_wohnungen', 'qm_leerstand_gewerbe'],
     einfamilienhaus: ['zimmer', 'badezimmer', 'grundstuecksflaeche', 'garage', 'keller', 'balkone'],
@@ -78,6 +80,23 @@ function App() {
     }
     const specificFields = typeSpecificFields[data.objektTyp as keyof typeof typeSpecificFields] || [];
     return specificFields.includes(fieldName);
+  };
+
+  // Berechnungslogik für Faktoren
+  const calculateFactors = (verkaufspreis: string, istMiete: string, sollMiete: string) => {
+    const preis = parseFloat(verkaufspreis) || 0;
+    const istMieteNum = parseFloat(istMiete) || 0;
+    const sollMieteNum = parseFloat(sollMiete) || 0;
+    
+    const istFaktor = istMieteNum > 0 ? (preis / (istMieteNum * 12)).toFixed(2) : '';
+    const sollFaktor = sollMieteNum > 0 ? (preis / (sollMieteNum * 12)).toFixed(2) : '';
+    
+    return { istFaktor, sollFaktor };
+  };
+
+  // Funktion zum Prüfen ob ein Feld leer/null ist
+  const isFieldEmpty = (value: string): boolean => {
+    return !value || value === '0' || value === '-' || value.trim() === '';
   };
 
   const [data, setData] = useState<ImmobilienData>({
@@ -104,9 +123,11 @@ function App() {
     verkaufspreis: '',
     ist_miete: '',
     soll_miete: '',
-    nebenkosten: '',
+    betriebskosten_hausgeld: '',
     maklercourtage: '',
-    faktor: '',
+    ist_faktor: '',
+    soll_faktor: '',
+    watermark_text: '',
     heizungsart: '',
     energietraeger: '',
     bauzustand: '',
@@ -122,7 +143,22 @@ function App() {
   const [generatedTexts, setGeneratedTexts] = useState<any>({});
 
   const handleChange = (field: string, value: string) => {
-    setData(prev => ({ ...prev, [field]: value }));
+    setData(prev => {
+      const newData = { ...prev, [field]: value };
+      
+      // Automatische Berechnung der Faktoren wenn sich relevante Felder ändern
+      if (field === 'verkaufspreis' || field === 'ist_miete' || field === 'soll_miete') {
+        const { istFaktor, sollFaktor } = calculateFactors(
+          field === 'verkaufspreis' ? value : newData.verkaufspreis,
+          field === 'ist_miete' ? value : newData.ist_miete,
+          field === 'soll_miete' ? value : newData.soll_miete
+        );
+        newData.ist_faktor = istFaktor;
+        newData.soll_faktor = sollFaktor;
+      }
+      
+      return newData;
+    });
   };
 
   const handleFieldUpdate = (update: any) => {
@@ -162,6 +198,13 @@ function App() {
 
   return (
     <div className="app">
+      {/* Watermark */}
+      {data.watermark_text && (
+        <div className="app-watermark">
+          {data.watermark_text}
+        </div>
+      )}
+      
       <div className="container">
         <header className="header">
           <div className="header-content">
@@ -262,6 +305,13 @@ function App() {
                     min="1"
                   />
                 )}
+
+                <TextField 
+                  id="watermark_text" 
+                  label="Watermark-Text" 
+                  value={data.watermark_text} 
+                  onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('watermark_text', fn)}
+                />
               </div>
             </section>
           )}
@@ -494,12 +544,12 @@ function App() {
                   />
                 )}
 
-                {shouldShowField('nebenkosten') && (
+                {shouldShowField('betriebskosten_hausgeld') && (
                   <TextField 
-                    id="nebenkosten" 
-                    label="Nebenkosten / Monat (€)" 
-                    value={data.nebenkosten} 
-                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('nebenkosten', fn)}
+                    id="betriebskosten_hausgeld" 
+                    label="Betriebskosten/Hausgeld (€/Monat)" 
+                    value={data.betriebskosten_hausgeld} 
+                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('betriebskosten_hausgeld', fn)}
                     type="number"
                   />
                 )}
@@ -514,14 +564,28 @@ function App() {
                   max="10"
                 />
 
-                {shouldShowField('faktor') && (
-                  <TextField 
-                    id="faktor" 
-                    label="Kaufpreisfaktor" 
-                    value={data.faktor} 
-                    onChange={(fn: any) => typeof fn === 'function' ? setData(fn) : handleChange('faktor', fn)}
-                    type="number"
-                  />
+                {shouldShowField('ist_faktor') && (
+                  <div className="form-group">
+                    <label className="ui-label">IST-Faktor (berechnet)</label>
+                    <input 
+                      className="ui-input calculated-field"
+                      value={data.ist_faktor}
+                      readOnly
+                      placeholder="Wird automatisch berechnet"
+                    />
+                  </div>
+                )}
+
+                {shouldShowField('soll_faktor') && (
+                  <div className="form-group">
+                    <label className="ui-label">SOLL-Faktor (berechnet)</label>
+                    <input 
+                      className="ui-input calculated-field"
+                      value={data.soll_faktor}
+                      readOnly
+                      placeholder="Wird automatisch berechnet"
+                    />
+                  </div>
                 )}
               </div>
 
