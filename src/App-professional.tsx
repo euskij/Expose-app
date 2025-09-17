@@ -793,12 +793,22 @@ function AppProfessional({
                 {photos.map((photo, index) => (
                   <div key={index} className="photo-item">
                     <img src={photo} alt={`Foto ${index + 1}`} className="photo-thumbnail" />
-                    <button 
-                      className="photo-remove"
-                      onClick={() => removePhoto(index)}
-                    >
-                      ❌
-                    </button>
+                    <div style={{display:'flex', alignItems:'center', gap:'8px', marginTop:'4px'}}>
+                      <input
+                        type="radio"
+                        name="titelbild"
+                        checked={data.titelbildIndex === String(index)}
+                        onChange={() => handleChange('titelbildIndex', String(index))}
+                        style={{marginRight:'4px'}}
+                      />
+                      <span style={{fontSize:'0.85rem'}}>Titelbild</span>
+                      <button 
+                        className="photo-remove"
+                        onClick={() => removePhoto(index)}
+                      >
+                        ❌
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>

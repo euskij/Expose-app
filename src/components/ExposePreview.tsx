@@ -113,7 +113,7 @@ const ExposePreview: React.FC<ExposePreviewProps> = ({ data, photos, logo, theme
           <h3>📸 Bilder</h3>
           <div className="expose-photos">
             <div className="main-photo photo-container" style={{ position: 'relative' }}>
-              <img src={photos[0]} alt="Hauptfoto" style={{ objectFit: 'cover', objectPosition: 'center', width: '100%', height: '100%' }} />
+              <img src={photos[data.titelbildIndex ? Number(data.titelbildIndex) : 0]} alt="Hauptfoto" style={{ objectFit: 'cover', objectPosition: 'center', width: '100%', height: '100%' }} />
               {logo && (
                 <img src={logo} alt="Logo" style={{ position: 'absolute', top: 8, right: 8, width: 48, height: 24, objectFit: 'contain', background: '#fff', borderRadius: 4, boxShadow: '0 1px 4px rgba(0,0,0,0.08)' }} />
               )}

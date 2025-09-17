@@ -43,8 +43,9 @@ export type ImmobilienData = {
   energieausweis_art?: string;
   energiebedarf?: string;
   energieeffizienzklasse?: string;
-  gewerbeflaeche?: string;
+    // gewerbeflaeche entfernt, da nur in Grunddaten relevant
   letzte_sanierung?: string;
+  titelbildIndex?: string; // Index des gewählten Titelbilds (als string für Kompatibilität)
 };
 
 export interface OptimSettings {

@@ -351,8 +351,8 @@ export function ExposePDF({ data, photos, color = '#3498db', logo, theme = 'blue
             </View>
           )}
           {/* Titelbild Vollbreite */}
-          {photos[0] && (
-            <Image src={photos[0]} style={{width: '100%', height: '60%', objectFit: 'cover'}} />
+          {photos[(data.titelbildIndex ? Number(data.titelbildIndex) : 0)] && (
+            <Image src={photos[(data.titelbildIndex ? Number(data.titelbildIndex) : 0)]} style={{width: '100%', height: '60%', objectFit: 'cover'}} />
           )}
           {/* Overlay Box unten */}
           <View style={{position: 'absolute', bottom: 60, left: 40, right: 40, backgroundColor: '#ffffffee', padding: 20, borderLeftWidth: 6, borderLeftColor: primaryColor, borderRadius: 6}}>
@@ -400,7 +400,7 @@ export function ExposePDF({ data, photos, color = '#3498db', logo, theme = 'blue
           {/* Titelbild falls vorhanden */}
           {photos.length > 0 && (
             <View style={{marginBottom: 20, position: 'relative'}}>
-              <Image src={photos[0]} style={{width: '100%', height: 260, objectFit: 'cover', borderRadius: 6}} />
+              <Image src={photos[(data.titelbildIndex ? Number(data.titelbildIndex) : 0)]} style={{width: '100%', height: 260, objectFit: 'cover', borderRadius: 6}} />
               {logo && (
                 <View style={{position: 'absolute', top: 10, right: 10, backgroundColor: '#ffffffcc', padding: 6, borderRadius: 6}}>
                   <Image src={logo} style={{width: 70, height: 28}} />
