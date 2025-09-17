@@ -29,29 +29,33 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
         },
         header: {
           marginBottom: 30,
-          borderBottom: '2px solid #2c3e50',
+          borderBottomWidth: 2,
+          borderBottomColor: '#2c3e50',
+          borderBottomStyle: 'solid',
           paddingBottom: 20
         },
         title: { 
           fontSize: 24, 
-          fontWeight: 'bold',
+          fontFamily: 'Helvetica-Bold',
           color: '#2c3e50',
           marginBottom: 8
         },
         address: {
           fontSize: 14,
-          color: '#555',
-          fontStyle: 'italic'
+          color: '#555555',
+          fontFamily: 'Helvetica-Oblique'
         },
         section: { 
           marginBottom: 25 
         },
         sectionTitle: {
           fontSize: 16,
-          fontWeight: 'bold',
+          fontFamily: 'Helvetica-Bold',
           color: '#2c3e50',
           marginBottom: 12,
-          borderBottom: '1px solid #e9ecef',
+          borderBottomWidth: 1,
+          borderBottomColor: '#e9ecef',
+          borderBottomStyle: 'solid',
           paddingBottom: 5
         },
         keyFactsContainer: {
@@ -62,7 +66,7 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
         },
         keyFactsTitle: {
           fontSize: 14,
-          fontWeight: 'bold',
+          fontFamily: 'Helvetica-Bold',
           color: '#2c3e50',
           marginBottom: 10
         },
@@ -77,25 +81,27 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
         },
         keyFactLabel: {
           fontSize: 9,
-          color: '#666',
+          color: '#666666',
           marginBottom: 2
         },
         keyFactValue: {
           fontSize: 12,
-          fontWeight: 'bold',
+          fontFamily: 'Helvetica-Bold',
           color: '#2c3e50'
         },
         tableRow: {
           display: 'flex',
           flexDirection: 'row',
-          borderBottom: '1px solid #e9ecef',
+          borderBottomWidth: 1,
+          borderBottomColor: '#e9ecef',
+          borderBottomStyle: 'solid',
           paddingVertical: 6
         },
         tableLabel: {
           width: '40%',
           fontSize: 10,
-          color: '#666',
-          fontWeight: 'bold'
+          color: '#666666',
+          fontFamily: 'Helvetica-Bold'
         },
         tableValue: {
           width: '60%',
@@ -115,13 +121,16 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
           display: 'flex',
           flexDirection: 'row',
           flexWrap: 'wrap',
-          gap: 10
+          marginBottom: 10
         },
         image: {
           width: 120,
           height: 90,
-          objectFit: 'cover',
-          border: '1px solid #e9ecef'
+          marginRight: 10,
+          marginBottom: 10,
+          borderWidth: 1,
+          borderColor: '#e9ecef',
+          borderStyle: 'solid'
         },
         watermark: {
           position: 'absolute',
@@ -136,7 +145,7 @@ export const TextPreviewModal: React.FC<TextPreviewModalProps> = ({
           opacity: 0.05,
           fontSize: 48,
           color: '#ffffff',
-          fontWeight: 'bold',
+          fontFamily: 'Helvetica-Bold',
           zIndex: -1
         }
       });
